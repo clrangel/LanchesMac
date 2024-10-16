@@ -1,4 +1,6 @@
 using LanchesMac.Context;
+using LanchesMac.Repositories;
+using LanchesMac.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -8,6 +10,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
+builder.Services.AddTransient<ILancheRepository, LancheRepository>();
+
+//Outra formma de injeção de dependência.
+
+//builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+//builder.Services.AddScoped<ILancheRepository, LancheRepository>();
 
 var app = builder.Build();
 
