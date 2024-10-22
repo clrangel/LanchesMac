@@ -11,13 +11,21 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+//Injeção de dependência.
 builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddTransient<ILancheRepository, LancheRepository>();
 
 //Outra formma de injeção de dependência.
-
 //builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 //builder.Services.AddScoped<ILancheRepository, LancheRepository>();
+
+
+// 3. Configuração de Session e HttpContext
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+// 1. Configuração de Session e HttpContext
+builder.Services.AddMemoryCache();
+builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -33,6 +41,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+
+
+// 2. Configuração de Session e HttpContext
+app.UseSession();
 
 app.UseAuthorization();
 
