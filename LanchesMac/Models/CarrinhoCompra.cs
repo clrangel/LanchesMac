@@ -45,7 +45,7 @@ namespace LanchesMac.Models
                 s => s.Lanche.Id == lanche.Id &&
                      s.CarrinhoCompraId == CarrinhoCompraId);
 
-            if(CarrinhoCompraItem == null)
+            if (CarrinhoCompraItem == null)
             {
                 CarrinhoCompraItem = new CarrinhoCompraItem
                 {
@@ -60,7 +60,32 @@ namespace LanchesMac.Models
                 CarrinhoCompraItem.Quantidade++;
             }
             _context.SaveChanges();
-                
+        }
+
+        //---> Remove um item do carrinho
+        public int RemoverDoCarrinho(Lanche lanche)
+        {
+            //Verifica se existe o lanche
+            var CarrinhoCompraItem = _context.CarrinhoCompraItens.SingleOrDefault(
+                s => s.Lanche.Id == lanche.Id &&
+                     s.CarrinhoCompraId == CarrinhoCompraId);
+
+            var quantidadeLocal = 0;
+
+            if(CarrinhoCompraItem != null)
+            {
+                if(CarrinhoCompraItem.Quantidade > 1)
+                {
+                    CarrinhoCompraItem.Quantidade--;
+                    quantidadeLocal = CarrinhoCompraItem.Quantidade;
+                }
+                else
+                {
+                    _context.CarrinhoCompraItens.Remove(CarrinhoCompraItem);
+                }
+            }
+            _context.SaveChanges();
+            return quantidadeLocal;
         }
     }
 }
