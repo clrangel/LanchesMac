@@ -99,7 +99,7 @@ namespace LanchesMac.Models
                            .ToList());
         }
 
-        // ---> Método limpar todos os itens do carrinho
+        // ---> Limpa todos os itens do carrinho
         public void LimparCarrinho()
         {
             var carrinhoItens = _context.CarrinhoCompraItens
@@ -107,6 +107,14 @@ namespace LanchesMac.Models
 
             _context.CarrinhoCompraItens.RemoveRange(carrinhoItens);
             _context.SaveChanges();
+        }
+
+        //---> Retorna o valor total de todos os itens do carrinho
+        public decimal GetCarrinhoCompraTotal()
+        {
+            var total = _context.CarrinhoCompraItens.Where(c => c.CarrinhoCompraId == CarrinhoCompraId)
+                .Select(c => c.Lanche.Preco * c.Quantidade).Sum();
+            return total;
         }
     }
 }
