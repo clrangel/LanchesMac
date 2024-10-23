@@ -98,5 +98,15 @@ namespace LanchesMac.Models
                            .Include(s => s.Lanche)
                            .ToList());
         }
+
+        // ---> Método limpar todos os itens do carrinho
+        public void LimparCarrinho()
+        {
+            var carrinhoItens = _context.CarrinhoCompraItens
+                                 .Where(carrinho => carrinho.CarrinhoCompraId == CarrinhoCompraId);
+
+            _context.CarrinhoCompraItens.RemoveRange(carrinhoItens);
+            _context.SaveChanges();
+        }
     }
 }
