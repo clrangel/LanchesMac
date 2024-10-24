@@ -1,4 +1,5 @@
 using LanchesMac.Context;
+using LanchesMac.Models;
 using LanchesMac.Repositories;
 using LanchesMac.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -11,19 +12,21 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-//Injeção de dependência.
+//INJEÇÃO DE DEPENDÊNCIA
 builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddTransient<ILancheRepository, LancheRepository>();
+//Registra o serviço da classe e já cria um carrinho de compras
+builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
 
 //Outra formma de injeção de dependência.
 //builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 //builder.Services.AddScoped<ILancheRepository, LancheRepository>();
 
 
-// 3. Configuração de Session e HttpContext
+//---> 3. Configuração de Session e HttpContext
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-// 1. Configuração de Session e HttpContext
+//---> 1. Configuração de Session e HttpContext
 builder.Services.AddMemoryCache();
 builder.Services.AddSession();
 
@@ -44,7 +47,7 @@ app.UseRouting();
 
 
 
-// 2. Configuração de Session e HttpContext
+//---> 2. Configuração de Session e HttpContext
 app.UseSession();
 
 app.UseAuthorization();
