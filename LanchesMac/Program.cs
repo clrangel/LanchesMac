@@ -15,6 +15,7 @@ builder.Services.AddControllersWithViews();
 //INJEÇÃO DE DEPENDÊNCIA
 builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddTransient<ILancheRepository, LancheRepository>();
+builder.Services.AddTransient<IPedidoRepository, PedidoRepository>();
 //Registra o serviço da classe e já cria um carrinho de compras
 builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
 
