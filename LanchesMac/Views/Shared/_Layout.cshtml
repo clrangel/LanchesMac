@@ -11,8 +11,10 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LanchesMac</a>
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    LanchesMac
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -35,7 +37,14 @@
                         <li class="nav-item">
                             @await Component.InvokeAsync("CarrinhoCompraResumo")
                         </li>
+
+                        <form class="navbar-form navbar-right" asp-controller="Lanche" asp-action="Search" method="get">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Procurar produto" name="searchString" value="@ViewData["searchString"]">
+                            </div>
+                        </form>
                         
+
                         
                     </ul>
                 </div>
