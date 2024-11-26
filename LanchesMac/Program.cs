@@ -61,6 +61,12 @@ app.UseAuthorization();
 
 //2 ---> Serviço do Identity - Authentication
 app.UseAuthentication();
+
+app.MapControllerRoute(
+     name: "areas",
+     pattern: "{area:exists}/{controller=Admin}/{action=Index}/{id?}");
+
+
 app.MapControllerRoute(
        name: "categoriaFiltro",
        pattern: "Lanche/{action}/{categoria?}",
