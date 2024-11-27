@@ -34,7 +34,9 @@ namespace LanchesMac.Controllers
 
             if (user != null)
             {
-                var result = await _signInManager.PasswordSignInAsync(user, loginVM.Password, false, false);
+                var result = await _signInManager.PasswordSignInAsync(user, 
+                    loginVM.Password, false, false);
+
                 if (result.Succeeded)
                 {
                     if (string.IsNullOrEmpty(loginVM.ReturnUrl))
@@ -66,6 +68,7 @@ namespace LanchesMac.Controllers
 
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "Member");
                     return RedirectToAction("Login", "Account");
                 }
                 else

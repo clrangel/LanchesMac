@@ -2,6 +2,7 @@ using LanchesMac.Context;
 using LanchesMac.Models;
 using LanchesMac.Repositories;
 using LanchesMac.Repositories.Interfaces;
+using LanchesMac.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +23,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddTransient<ILancheRepository, LancheRepository>();
 builder.Services.AddTransient<IPedidoRepository, PedidoRepository>();
+builder.Services.AddScoped<ISeedUserRoleInitial, SeedUserRoleInitial>();
+
 //Registra o serviço da classe e já cria um carrinho de compras
 builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
 
