@@ -25,6 +25,16 @@ builder.Services.AddTransient<ILancheRepository, LancheRepository>();
 builder.Services.AddTransient<IPedidoRepository, PedidoRepository>();
 builder.Services.AddScoped<ISeedUserRoleInitial, SeedUserRoleInitial>();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin",
+        politica =>
+        {
+            politica.RequireRole("Admin");
+        });
+});
+
+
 //Registra o serviço da classe e já cria um carrinho de compras
 builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
 
@@ -55,6 +65,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+CriarPerfisUsuarios(app);
 
 
 //---> 2. Configuração de Session e HttpContext
@@ -80,3 +91,14 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+void CriarPerfisUsuarios(WebApplication app)
+{
+    var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+    using (var scope = scopedFactory.CreateScope())
+    {
+        var service = scope.ServiceProvider.GetService<ISeedUserRoleInitial>();
+        service.SeedUsers();
+        service.SeedRoles();
+    }
+}
