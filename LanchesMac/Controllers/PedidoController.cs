@@ -1,5 +1,6 @@
 ﻿using LanchesMac.Models;
 using LanchesMac.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LanchesMac.Controllers
@@ -20,12 +21,14 @@ namespace LanchesMac.Controllers
             return View();
         }
 
+        [Authorize]
         public IActionResult Checkout()
         {
             return View();
         }
 
         //Método que apresenta todas as informações de um pedido
+        [Authorize]
         [HttpPost]
         public IActionResult Checkout(Pedido pedido)
         {

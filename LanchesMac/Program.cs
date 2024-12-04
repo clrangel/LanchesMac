@@ -35,16 +35,15 @@ builder.Services.AddAuthorization(options =>
 });
 
 
+//---> 3. Configuração de Session e HttpContext
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 //Registra o serviço da classe e já cria um carrinho de compras
 builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
 
 //Outra formma de injeção de dependência.
 //builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 //builder.Services.AddScoped<ILancheRepository, LancheRepository>();
-
-
-//---> 3. Configuração de Session e HttpContext
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 //---> 1. Configuração de Session e HttpContext
 builder.Services.AddMemoryCache();
@@ -71,26 +70,27 @@ CriarPerfisUsuarios(app);
 //---> 2. Configuração de Session e HttpContext
 app.UseSession();
 
-app.UseAuthorization();
 
 //2 ---> Serviço do Identity - Authentication
 app.UseAuthentication();
+app.UseAuthorization();
 
-app.MapControllerRoute(
+#pragma warning disable ASP0014
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
      name: "areas",
      pattern: "{area:exists}/{controller=Admin}/{action=Index}/{id?}");
 
-
-app.MapControllerRoute(
+    endpoints.MapControllerRoute(
        name: "categoriaFiltro",
        pattern: "Lanche/{action}/{categoria?}",
        defaults: new { Controller = "Lanche", action = "List" });
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.Run();
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+});
 
 void CriarPerfisUsuarios(WebApplication app)
 {
@@ -102,3 +102,5 @@ void CriarPerfisUsuarios(WebApplication app)
         service.SeedRoles();
     }
 }
+
+app.Run();

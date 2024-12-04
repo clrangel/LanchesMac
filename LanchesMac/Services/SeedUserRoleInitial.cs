@@ -16,13 +16,12 @@ namespace LanchesMac.Services
 
         public void SeedRoles()
         {
-            if(!_roleManager.RoleExistsAsync("Member").Result)
+            if (!_roleManager.RoleExistsAsync("Member").Result)
             {
                 IdentityRole role = new IdentityRole();
                 role.Name = "Member";
                 role.NormalizedName = "MEMBER";
                 IdentityResult roleResult = _roleManager.CreateAsync(role).Result;
-                
             }
             if (!_roleManager.RoleExistsAsync("Admin").Result)
             {
@@ -30,7 +29,6 @@ namespace LanchesMac.Services
                 role.Name = "Admin";
                 role.NormalizedName = "ADMIN";
                 IdentityResult roleResult = _roleManager.CreateAsync(role).Result;
-
             }
         }
 
@@ -53,7 +51,6 @@ namespace LanchesMac.Services
                 {
                     _userManager.AddToRoleAsync(user, "Member").Wait();
                 }
-
             }
 
             if (_userManager.FindByEmailAsync("admin@localhost").Result == null)
@@ -73,7 +70,6 @@ namespace LanchesMac.Services
                 {
                     _userManager.AddToRoleAsync(user, "Admin").Wait();
                 }
-
             }
         }
     }
