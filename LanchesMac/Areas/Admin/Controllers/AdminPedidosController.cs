@@ -13,23 +13,22 @@ namespace LanchesMac.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
-    public class AdminLanchesController : Controller
+    public class AdminPedidosController : Controller
     {
         private readonly AppDbContext _context;
 
-        public AdminLanchesController(AppDbContext context)
+        public AdminPedidosController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Admin/AdminLanches
+        // GET: Admin/AdminPedidos
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Lanches.Include(l => l.Categoria);
-            return View(await appDbContext.ToListAsync());
+            return View(await _context.Pedidos.ToListAsync());
         }
 
-        // GET: Admin/AdminLanches/Details/5
+        // GET: Admin/AdminPedidos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -37,42 +36,39 @@ namespace LanchesMac.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var lanche = await _context.Lanches
-                .Include(l => l.Categoria)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (lanche == null)
+            var pedido = await _context.Pedidos
+                .FirstOrDefaultAsync(m => m.PedidoId == id);
+            if (pedido == null)
             {
                 return NotFound();
             }
 
-            return View(lanche);
+            return View(pedido);
         }
 
-        // GET: Admin/AdminLanches/Create
+        // GET: Admin/AdminPedidos/Create
         public IActionResult Create()
         {
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "CategoriaNome");
             return View();
         }
 
-        // POST: Admin/AdminLanches/Create
+        // POST: Admin/AdminPedidos/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,DescricaoCurta,DescricaoDetalhada,Preco,ImagemUrl,ImagemThumbnailUrl,IsLanchePreferido,EmEstoque,CategoriaId")] Lanche lanche)
+        public async Task<IActionResult> Create([Bind("PedidoId,Nome,Sobrenome,Endereco1,Endereco2,Cep,Estado,Cidade,Telefone,Email,PedidoEnviado,PedidoEntregueEm")] Pedido pedido)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(lanche);
+                _context.Add(pedido);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "CategoriaNome", lanche.CategoriaId);
-            return View(lanche);
+            return View(pedido);
         }
 
-        // GET: Admin/AdminLanches/Edit/5
+        // GET: Admin/AdminPedidos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,23 +76,22 @@ namespace LanchesMac.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var lanche = await _context.Lanches.FindAsync(id);
-            if (lanche == null)
+            var pedido = await _context.Pedidos.FindAsync(id);
+            if (pedido == null)
             {
                 return NotFound();
             }
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "CategoriaNome", lanche.CategoriaId);
-            return View(lanche);
+            return View(pedido);
         }
 
-        // POST: Admin/AdminLanches/Edit/5
+        // POST: Admin/AdminPedidos/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,DescricaoCurta,DescricaoDetalhada,Preco,ImagemUrl,ImagemThumbnailUrl,IsLanchePreferido,EmEstoque,CategoriaId")] Lanche lanche)
+        public async Task<IActionResult> Edit(int id, [Bind("PedidoId,Nome,Sobrenome,Endereco1,Endereco2,Cep,Estado,Cidade,Telefone,Email,PedidoEnviado,PedidoEntregueEm")] Pedido pedido)
         {
-            if (id != lanche.Id)
+            if (id != pedido.PedidoId)
             {
                 return NotFound();
             }
@@ -105,12 +100,12 @@ namespace LanchesMac.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(lanche);
+                    _context.Update(pedido);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LancheExists(lanche.Id))
+                    if (!PedidoExists(pedido.PedidoId))
                     {
                         return NotFound();
                     }
@@ -121,11 +116,10 @@ namespace LanchesMac.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "CategoriaNome", lanche.CategoriaId);
-            return View(lanche);
+            return View(pedido);
         }
 
-        // GET: Admin/AdminLanches/Delete/5
+        // GET: Admin/AdminPedidos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,35 +127,34 @@ namespace LanchesMac.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var lanche = await _context.Lanches
-                .Include(l => l.Categoria)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (lanche == null)
+            var pedido = await _context.Pedidos
+                .FirstOrDefaultAsync(m => m.PedidoId == id);
+            if (pedido == null)
             {
                 return NotFound();
             }
 
-            return View(lanche);
+            return View(pedido);
         }
 
-        // POST: Admin/AdminLanches/Delete/5
+        // POST: Admin/AdminPedidos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var lanche = await _context.Lanches.FindAsync(id);
-            if (lanche != null)
+            var pedido = await _context.Pedidos.FindAsync(id);
+            if (pedido != null)
             {
-                _context.Lanches.Remove(lanche);
+                _context.Pedidos.Remove(pedido);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool LancheExists(int id)
+        private bool PedidoExists(int id)
         {
-            return _context.Lanches.Any(e => e.Id == id);
+            return _context.Pedidos.Any(e => e.PedidoId == id);
         }
     }
 }
